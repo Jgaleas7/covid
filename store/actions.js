@@ -36,6 +36,7 @@ export default {
   },
 
   onAuthStateChanged({ commit }, { authUser }) {
+
     if (!authUser) {
       commit('RESET_STORE')
       return

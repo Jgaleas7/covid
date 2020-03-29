@@ -72,6 +72,7 @@
        <v-card-actions>
     <v-btn
       :disabled="!valid"
+      block
       color="success"
       class="mr-4"
       @click="validate"
@@ -86,6 +87,15 @@
 import { mapState, mapGetters } from 'vuex'
 
   export default {
+      computed: {
+    ...mapState({
+     
+      authUser: (state) => state.authUser
+    }),
+    ...mapGetters({
+      isLoggedIn: 'isLoggedIn'
+    })
+  },
     data: () => ({
       valid: false,
       password:'',
@@ -117,14 +127,7 @@ import { mapState, mapGetters } from 'vuex'
       ],
       
     }),
-    computed: {
-    ...mapState({
-      authUser: (state) => state.authUser
-    }),
-    ...mapGetters({
-      isLoggedIn: 'isLoggedIn'
-    })
-  },
+  
 
     methods: {
       
@@ -133,7 +136,7 @@ import { mapState, mapGetters } from 'vuex'
                             this.email,
                             this.password
                         ).then((response)=>{
-                             console.log(response.user.uid)
+                             
                               const messageRef = this.$fireStore.collection('usuarios').doc()
                               messageRef.set({
                                 user_id:response.user.uid,
@@ -144,8 +147,11 @@ import { mapState, mapGetters } from 'vuex'
                                 correo:this.email,
                                 ciudad:this.ciudad
                               })
-                               
-                             
+                               this.nombres=''
+                                this.apellidos=''
+                                this.telefono=''
+                                this.identidad=''
+                                this.email=''  
                         })
                    
                      .catch ((e)=>{

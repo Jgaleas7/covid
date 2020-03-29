@@ -52,12 +52,14 @@
       <v-spacer />
       <v-btn
         dark
+        v-if="!isLoggedIn"
         class="ma-2" tile outlined color="success"
         to="/register"
-        @click.stop="rightDrawer = !rightDrawer"
+       
       >
         Registrarse
       </v-btn>
+      <v-btn dark v-else outlined   class="ma-2" tile @click="logout">Salir</v-btn>
     </v-app-bar>
     <v-content>
       <v-container>
@@ -75,6 +77,7 @@
 </template>
 
 <script>
+import {  mapGetters } from 'vuex'
 export default {
   data () {
     return {
@@ -103,6 +106,22 @@ export default {
       rightDrawer: false,
       title: 'COVID HN'
     }
+  },
+      computed: {
+    ...mapGetters({
+      isLoggedIn: 'isLoggedIn'
+    })
+  },
+
+  methods:{
+      async logout() {
+      try {
+        await this.$fireAuth.signOut()
+        this.$router.push('/login');
+      } catch (e) {
+        alert(e)
+      }
+    },
   }
 }
 </script>
