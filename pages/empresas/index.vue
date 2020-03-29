@@ -96,7 +96,17 @@
   </v-data-table>
 </template>
 <script>
+  import { mapState, mapGetters } from 'vuex'
   export default {
+     middleware: 'auth', //para proteger la ruta
+      computed: {
+    ...mapState({
+      authUser: (state) => state.authUser
+    }), 
+    ...mapGetters({
+      isLoggedIn: 'isLoggedIn'
+    })
+  },
     data: () => ({
       dialog: false,
       headers: [
@@ -116,11 +126,13 @@
       editedItem: {
         name: '',
         categoria: 0,
+        correo: ''
 
       },
       defaultItem: {
         name: '',
         categoria: 0,
+        correo: ''
 
       },
     }),
@@ -139,7 +151,11 @@
 
     mounted () {
       this.initialize()
-
+      if (this.$store.state.authUser){
+          this.editedItem.correo = this.$store.state.authUser.email
+          this.defaultItem.correo = this.$store.state.authUser.email
+       }
+      
     },
 
     methods: {
