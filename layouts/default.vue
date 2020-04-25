@@ -55,7 +55,6 @@
         v-if="!isLoggedIn"
         class="ma-2" tile outlined color="success"
         to="/register"
-       
       >
         Registrarse
       </v-btn>

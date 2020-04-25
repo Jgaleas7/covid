@@ -261,6 +261,7 @@
         } else { // agregar nuevo
                           const messageRef = this.$fireStore.collection('sucursales').doc()
                     try {
+                      this.editedItem.nombre=this.nombre_empresa
                       await messageRef.set(this.editedItem)
                                 } catch (e) {
                                           console.log(e)
@@ -276,10 +277,11 @@
                               capacidad:this.editedItem.capacidad,
                               telefono:this.editedItem.telefono,
                               direccion:this.editedItem.direccion, 
-                              id_empresa:this.id
+                              id_empresa:this.id,
+                              nombre:this.nombre_empresa
                               }
                             //console.log(row)
-                            this.desserts.push(row)
+                            this.desserts.unshift(row)
                           }
                           this.close()
       },

@@ -1,8 +1,5 @@
 <template>
-    <v-layout
-            column
-            justify-center
-            align-center>
+    <v-layout  column   justify-center align-center>
         <v-flex
                 xs12
                 sm8
@@ -20,7 +17,6 @@
                         <v-text-field :rules="emailRules" v-model="email"  label="Correo" type="email"></v-text-field>
                         <v-text-field :rules="passwordRules" id="password"  v-model="password"  label="Password" required type="password"></v-text-field>
 
-
                     </v-card-text>
                     <v-card-actions>
                         <v-btn :disabled="!formValid" large block  @click="signInUser()">Login </v-btn>
@@ -28,7 +24,7 @@
                 </v-form>
                 <div v-else>
                    <p>You are logged in with {{ authUser.email }}.</p>
-                    <v-btn @click="logout">Log out </v-btn>
+                    <v-btn @click="logout">Salir </v-btn>
                 </div>
             </v-card>
         </v-flex>

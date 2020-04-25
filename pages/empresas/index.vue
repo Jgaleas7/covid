@@ -2,18 +2,17 @@
   <v-data-table
     :headers="headers"
     :items="desserts"
-    sort-by="calories"
     class="elevation-1"
   >
     <template v-slot:top>
       <v-toolbar flat >
-        <v-toolbar-title>Todas las empresas</v-toolbar-title>
+        <v-toolbar-title>Mis Empresas</v-toolbar-title>
         <v-divider
           class="mx-4"
           inset
           vertical
         ></v-divider>
-            No olvidar ingresar las sucursales
+            
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="600px">
           <template v-slot:activator="{ on }">
@@ -41,7 +40,7 @@
                 </v-row>
                 <v-row>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.correo" label="Correo"></v-text-field>
+                    <v-text-field readonly v-model="editedItem.correo" label="Correo"></v-text-field>
                   </v-col>
                 </v-row>
                <!-- <v-divider></v-divider> <v-divider></v-divider>
@@ -105,7 +104,11 @@
     }), 
     ...mapGetters({
       isLoggedIn: 'isLoggedIn'
-    })
+    }),
+
+     formTitle () {
+        return this.editedIndex === -1 ? 'Nueva Empresa' : 'Edit Empresa'
+      },
   },
     data: () => ({
       dialog: false,
@@ -137,11 +140,7 @@
       },
     }),
 
-    computed: {
-      formTitle () {
-        return this.editedIndex === -1 ? 'Nueva Empresa' : 'Edit Empresa'
-      },
-    },
+  
 
     watch: {
       dialog (val) {
@@ -150,27 +149,28 @@
     },
 
     mounted () {
-      this.initialize()
+     // this.initialize()
       if (this.$store.state.authUser){
           this.editedItem.correo = this.$store.state.authUser.email
           this.defaultItem.correo = this.$store.state.authUser.email
+          this.initialize(this.defaultItem.correo)
        }
       
     },
 
     methods: {
-      initialize () {
-              const messageRef = this.$fireStore.collection("empresas").get().then((querySnapshot) =>{
+      initialize (correo) {
+       
+              const messageRef = this.$fireStore.collection("empresas").where("correo", "==", correo).get().then((querySnapshot) =>{
+                    let empresasArray = []
                     querySnapshot.forEach((doc) =>{
                         // doc.data() is never undefined for query doc snapshots
-                            this.desserts.push({
-                              id: doc.id,
-                              nombre: doc.data().nombre,
-                              correo: doc.data().correo,
-                              categoria: doc.data().categoria,
-                            })
-                        //console.log(doc, " => ", doc.data());
+                            let empresa=doc.data()
+                            empresa.id=doc.id
+                            empresasArray.push(empresa)
+
                     })
+                    this.desserts=empresasArray
                 })
       },
 
@@ -197,7 +197,7 @@
         if (this.editedIndex > -1) { //editar
           Object.assign(this.desserts[this.editedIndex], this.editedItem)
         } else { // agregar nuevo
-                          const messageRef = this.$fireStore.collection('empresas').doc()
+                 const messageRef = this.$fireStore.collection('empresas').doc()
                     try {
                       await messageRef.set(this.editedItem)
                                 } catch (e) {
